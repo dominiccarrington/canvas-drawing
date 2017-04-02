@@ -9,7 +9,7 @@ class Dom
         }
         let element = this.createElement("input", container) as HTMLInputElement;
         element.type = "checkbox";
-        
+
         return element;
     }
 
