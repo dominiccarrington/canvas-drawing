@@ -288,6 +288,11 @@ class CanvasMath {
 		return rad / PI * 180;
 	}
 
+	public static round(num: number, decimal: number)
+	{
+    	return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
+	}
+
 	/**
 	 * @see https://github.com/processing/p5.js/blob/master/src/math/calculation.js#L749
 	 */
