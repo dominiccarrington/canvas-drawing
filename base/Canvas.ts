@@ -10,43 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-let _draw = (timestamp: number) => {
-    if (typeof draw === "function") {
-        draw();
-    }
-
-    if (typeof keyPressed === "function") {
-        for (var key in KEYS_PRESSED) {
-            if (KEYS_PRESSED[key]) {
-                keyPressed(KEYS_PRESSED);
-                break;
-            }
-        }
-    }
-
-    if (this._loop) {
-        animationSystem(_draw);
-    }
-}
-
-let animationSystem = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
-animationSystem(_draw);
-
-document.addEventListener("keydown", (event) => {
-    if (typeof keyDown === "function") {
-        keyDown(event);
-    }
-    KEYS_PRESSED[event.keyCode] = true;
-});
-
-document.addEventListener("keyup", (event) => {
-    if (typeof keyUp === "function") {
-        keyUp(event);
-    }
-    KEYS_PRESSED[event.keyCode] = false;
-});
-
-var KEYS_PRESSED = {};
 const TWO_PI = Math.PI * 2;
 const PI = Math.PI;
 
@@ -80,6 +43,47 @@ class Canvas
         this.canvas.width = width;
         this.canvas.height = height;
         this.canvas.style.display = "block";
+
+        this.registerEvents();
+    }
+
+    private registerEvents()
+    {
+        let _draw = (timestamp: number) => {
+            if (typeof draw === "function") {
+                draw();
+            }
+
+            if (typeof keyPressed === "function") {
+                for (var key in this.events.keysPressed) {
+                    if (this.events.keysPressed[key]) {
+                        keyPressed();
+                        break;
+                    }
+                }
+            }
+
+            if (this._loop) {
+                animationSystem(_draw);
+            }
+        }
+
+        let animationSystem = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+        animationSystem(_draw);
+
+        document.addEventListener("keydown", (event) => {
+            if (typeof keyDown === "function") {
+                keyDown(event);
+            }
+            this.events.keysPressed[event.keyCode] = true;
+        });
+
+        document.addEventListener("keyup", (event) => {
+            if (typeof keyUp === "function") {
+                keyUp(event);
+            }
+            this.events.keysPressed[event.keyCode] = false;
+        });
 
         this.canvas.addEventListener("mousemove",  (event: MouseEvent) => {
             var rect = this.canvas.getBoundingClientRect();
@@ -348,4 +352,5 @@ interface IEvents
 {
     mouseX: number;
     mouseY: number;
+    keysPressed: Object;
 }
