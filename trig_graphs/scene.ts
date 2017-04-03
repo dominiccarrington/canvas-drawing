@@ -50,7 +50,6 @@ function draw()
     let vStretch = parseFloat((<HTMLInputElement> Dom.get("#vStretch")).value);
     let hStretch = parseFloat((<HTMLInputElement> Dom.get("#hStretch")).value);
     
-    c.font("18px Courier New");
     c.strokeWidth(2);
     if (sinCheckbox.checked) {
         prevX = 0;
@@ -102,39 +101,47 @@ function draw()
     }
     c.strokeWidth(1);
 
+    let yVal = 18;
+    c.font("18px Courier New");
     c.stroke(127, 0, 255);
     c.line(c.events.mouseX, 0, c.events.mouseX, c.height);
 
-    c.stroke(0);
-    c.fill(0);
-    let yVal = 18;
-
     if (sinCheckbox.checked) {
-        let value = CanvasMath.round(vStretch * Math.sin(hStretch * CanvasMath.radians(c.events.mouseX)), 5);
+        let value = CanvasMath.round(vStretch * Math.sin(hStretch * CanvasMath.radians(c.events.mouseX)), 6);
         if (value < 0.0005 && value > -0.0005) {
             value = 0;
         }
         
         let text = (vStretch != 1 ? vStretch : "") + "sin(" + (hStretch != 1 ? hStretch + "*" : "") + c.events.mouseX + ") = " + value;
 
+        c.fill(255);
+        c.noStroke();
+        c.rect(c.width - c.textSize(text) - 5, yVal - 18, c.width, 18);
+        c.stroke(0);
+        c.fill(0);
         c.text(c.width - c.textSize(text) - 5, yVal, text);
         yVal += 20;
     }
 
     if (cosCheckbox.checked) {
-        let value = CanvasMath.round(vStretch * Math.cos(hStretch * CanvasMath.radians(c.events.mouseX)), 5);
+        let value = CanvasMath.round(vStretch * Math.cos(hStretch * CanvasMath.radians(c.events.mouseX)), 6);
         if (value < 0.0005 && value > -0.0005) {
             value = 0;
         }
 
         let text = (vStretch != 1 ? vStretch : "") + "cos(" + (hStretch != 1 ? hStretch + "*" : "") + c.events.mouseX + ") = " + value;
 
+        c.fill(255);
+        c.noStroke();
+        c.rect(c.width - c.textSize(text) - 5, yVal - 18, c.width, 18);
+        c.stroke(0);
+        c.fill(0);
         c.text(c.width - c.textSize(text) - 5, yVal, text);
         yVal += 20;
     }
 
     if (tanCheckbox.checked) {
-        let value = CanvasMath.round(vStretch * Math.tan(hStretch * CanvasMath.radians(c.events.mouseX)), 5);
+        let value = CanvasMath.round(vStretch * Math.tan(hStretch * CanvasMath.radians(c.events.mouseX)), 6);
         let infStretch = false;
         if (value < 0.0005 && value > -0.0005) {
             value = 0;
@@ -148,6 +155,11 @@ function draw()
 
         let text = (vStretch != 1 ? vStretch : "") + "tan(" + (hStretch != 1 ? hStretch + "*" : "") + c.events.mouseX + ") = " + (infStretch ? "∞" : value);
 
+        c.fill(255);
+        c.noStroke();
+        c.rect(c.width - c.textSize(text) - 5, yVal - 18, c.width, 18);
+        c.stroke(0);
+        c.fill(0);
         c.text(c.width - c.textSize(text) - 5, yVal, text);
         yVal += 20;
     }
