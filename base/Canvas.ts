@@ -34,6 +34,7 @@ class Canvas
         this.events = {
             mouseX: 0,
             mouseY: 0,
+            keysPressed: {},
         };
 
         this.canvas = document.createElement("canvas");
