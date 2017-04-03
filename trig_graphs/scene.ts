@@ -17,20 +17,20 @@ function setup()
     cosCheckbox = Dom.createCheckbox("Cos Graph");
     tanCheckbox = Dom.createCheckbox("Tan Graph");
 
-    let span = Dom.createSpan("y = ");
+    let span = Dom.createSpan("\\(y =\\)");
     let vStretchNum = Dom.createTextbox(span);
     vStretchNum.style.width = "25px";
     vStretchNum.id = "vStretch";
     vStretchNum.setAttribute("value", "1");
 
-    span.innerHTML += " f( ";
+    span.innerHTML += "\\(f(\\)";
 
     let hStretchNum = Dom.createTextbox(span);
     hStretchNum.style.width = "25px";
     hStretchNum.id = "hStretch";
     hStretchNum.setAttribute("value", "1");
 
-    span.innerHTML += " x)";
+    span.innerHTML += "\\(x)\\)";
 }
 
 function draw()
@@ -47,8 +47,8 @@ function draw()
 
     let prevX;
     let prevY;
-    let vStretch = parseInt((<HTMLInputElement> Dom.get("#vStretch")).value);
-    let hStretch = parseInt((<HTMLInputElement> Dom.get("#hStretch")).value);
+    let vStretch = parseFloat((<HTMLInputElement> Dom.get("#vStretch")).value);
+    let hStretch = parseFloat((<HTMLInputElement> Dom.get("#hStretch")).value);
     
     c.font("18px Courier New");
     c.strokeWidth(2);
@@ -114,7 +114,7 @@ function draw()
         if (value < 0.0005 && value > -0.0005) {
             value = 0;
         }
-        // let text = "sin(" + c.events.mouseX + ") = " + value;
+        
         let text = (vStretch != 1 ? vStretch : "") + "sin(" + (hStretch != 1 ? hStretch + "*" : "") + c.events.mouseX + ") = " + value;
 
         c.text(c.width - c.textSize(text) - 5, yVal, text);
@@ -126,7 +126,7 @@ function draw()
         if (value < 0.0005 && value > -0.0005) {
             value = 0;
         }
-        // let text = "cos(" + c.events.mouseX + ") = " + value;
+
         let text = (vStretch != 1 ? vStretch : "") + "cos(" + (hStretch != 1 ? hStretch + "*" : "") + c.events.mouseX + ") = " + value;
 
         c.text(c.width - c.textSize(text) - 5, yVal, text);
@@ -146,7 +146,6 @@ function draw()
             }
         }
 
-        // let text = "tan(" + c.events.mouseX + ") = " + value;
         let text = (vStretch != 1 ? vStretch : "") + "tan(" + (hStretch != 1 ? hStretch + "*" : "") + c.events.mouseX + ") = " + (infStretch ? "∞" : value);
 
         c.text(c.width - c.textSize(text) - 5, yVal, text);
