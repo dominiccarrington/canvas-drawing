@@ -2,44 +2,51 @@ window.addEventListener("load", () => {
     if (typeof setup === "function") {
         setup();
     }
+});
 
-    setInterval(() => {
-        if (typeof draw === "function") {
-            draw();
-        }
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof preload === "function") {
+        preload();
+    }
+});
 
+let _draw = (timestamp: number) => {
+    if (typeof draw === "function") {
+        draw();
+    }
+
+    if (typeof keyPressed === "function") {
         for (var key in KEYS_PRESSED) {
-            if (KEYS_PRESSED[key] && typeof keyPressed === "function") {
+            if (KEYS_PRESSED[key]) {
                 keyPressed(KEYS_PRESSED);
                 break;
             }
         }
+    }
 
-    }, 1000 / FRAMERATE);
+    if (this._loop) {
+        animationSystem(_draw);
+    }
+}
 
-    document.addEventListener("DOMContentLoaded", () => {
-        if (typeof preload === "function") {
-            preload();
-        }
-    });
+let animationSystem = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+animationSystem(_draw);
 
-    document.addEventListener("keydown", (event) => {
-        if (typeof keyDown === "function") {
-            keyDown(event);
-        }
-        KEYS_PRESSED[event.keyCode] = true;
-    });
+document.addEventListener("keydown", (event) => {
+    if (typeof keyDown === "function") {
+        keyDown(event);
+    }
+    KEYS_PRESSED[event.keyCode] = true;
+});
 
-    document.addEventListener("keyup", (event) => {
-        if (typeof keyUp === "function") {
-            keyUp(event);
-        }
-        KEYS_PRESSED[event.keyCode] = false;
-    });
+document.addEventListener("keyup", (event) => {
+    if (typeof keyUp === "function") {
+        keyUp(event);
+    }
+    KEYS_PRESSED[event.keyCode] = false;
 });
 
 var KEYS_PRESSED = {};
-const FRAMERATE = 60;
 const TWO_PI = Math.PI * 2;
 const PI = Math.PI;
 
@@ -47,11 +54,12 @@ class Canvas
 {
     public width: number;
     public height: number;
-    private _fill: boolean;
-    private _stroke: boolean;
     public canvas: HTMLCanvasElement;
     public ctx: CanvasRenderingContext2D;
     public events: IEvents;
+    private _fill: boolean;
+    private _stroke: boolean;
+    private _loop: boolean;
 
     constructor(width: number, height: number)
     {
@@ -59,6 +67,7 @@ class Canvas
         this.height = height;
         this._fill = true;
         this._stroke = true;
+        this._loop = true;
         this.events = {
             mouseX: 0,
             mouseY: 0,
@@ -77,6 +86,11 @@ class Canvas
             this.events.mouseX = event.clientX - rect.left,
             this.events.mouseY = event.clientY - rect.top
         });
+    }
+
+    public noLoop()
+    {
+        this._loop = false;
     }
 
     public fill(r: number|Array<number>, g?: number, b?: number, a?: number)
