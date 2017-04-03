@@ -3,6 +3,7 @@
 
 const maxValue = TWO_PI * 2;
 const step = 0.005;
+let bound = 1;
 let c: Canvas;
 let sinCheckbox: HTMLInputElement;
 let cosCheckbox: HTMLInputElement;
@@ -11,6 +12,12 @@ let tanCheckbox: HTMLInputElement;
 function setup()
 {
     c = new Canvas(721, 300);
+
+    let range = Dom.createSlider(1, 1, 20);
+    range.addEventListener("input", (event: Event) => {
+        bound = parseInt((<HTMLInputElement> event.srcElement).value);
+    });
+
     sinCheckbox = Dom.createCheckbox("Sin Graph");
     sinCheckbox.checked = true;
 
@@ -42,7 +49,7 @@ function draw()
     c.line(0, 150, c.width, 150);
     c.line(0, 0, 0, c.height);
     for (let i = 90; i <= c.width; i += 90) {
-        c.dashLine(i, 0, i, c.height, [5, 5, 5]);
+        c.dashLine(i, 0, i, c.height, [5]);
     }
 
     let prevX;
@@ -58,7 +65,7 @@ function draw()
 
         for (let i = -maxValue; i <= maxValue; i += step) {
             let x = CanvasMath.degrees(i); // RAD -> DEG
-            let y = CanvasMath.map(vStretch * Math.sin(hStretch * i), -1, 1, 290, 10);
+            let y = CanvasMath.map(vStretch * Math.sin(hStretch * i), -bound, bound, 290, 10);
 
             c.line(prevX, prevY, x, y);
             prevX = x;
@@ -72,7 +79,7 @@ function draw()
         prevY = 10;
         for (let i = -maxValue; i <= maxValue; i += step) {
             let x = CanvasMath.degrees(i); // RAD -> DEG
-            let y = CanvasMath.map(vStretch * Math.cos(hStretch * i), -1, 1, 290, 10);
+            let y = CanvasMath.map(vStretch * Math.cos(hStretch * i), -bound, bound, 290, 10);
 
             c.line(prevX, prevY, x, y);
             prevX = x;
@@ -86,7 +93,7 @@ function draw()
         prevY = 150;
         for (let i = -maxValue; i <= maxValue; i += step) {
             let x = CanvasMath.degrees(i);
-            let y = CanvasMath.map(vStretch * Math.tan(hStretch * i), -1, 1, 290, 10);
+            let y = CanvasMath.map(vStretch * Math.tan(hStretch * i), -bound, bound, 290, 10);
 
             for (let i = 90 / hStretch; i <= c.width; i += 180 / hStretch) {
                 if (prevX < i && x > i) {
@@ -163,4 +170,8 @@ function draw()
         c.text(c.width - c.textSize(text) - 5, yVal, text);
         yVal += 20;
     }
+
+    c.font("12px Courier New")
+    c.text(5, 12, bound.toString());
+    c.text(5, c.height - 5, "-" + bound);
 }
