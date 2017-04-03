@@ -20,6 +20,17 @@ class Dom
         return element;
     }
 
+    public static createSlider(start: number, min: number, max: number, parent = document.body): HTMLInputElement
+    {
+        let element = this.createElement("input", parent) as HTMLInputElement;
+        element.type = "range";
+        element.setAttribute("value", start.toString());
+        element.min = min.toString();
+        element.max = max.toString();
+
+        return element;
+    }
+
     public static createSpan(text?: string, parent = document.body): HTMLSpanElement
     {
         let element = this.createElement("span");
