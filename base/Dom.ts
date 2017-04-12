@@ -31,6 +31,15 @@ class Dom
         return element;
     }
 
+    public static createButton(label?: string, parent = document.body)
+    {
+        let element = this.createElement("input", parent) as HTMLInputElement;
+        element.type = "button";
+        element.setAttribute("value", label);
+
+        return element;
+    }
+
     public static createSpan(text?: string, parent = document.body): HTMLSpanElement
     {
         let element = this.createElement("span");

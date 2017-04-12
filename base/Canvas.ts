@@ -20,9 +20,15 @@ class Canvas
     public canvas: HTMLCanvasElement;
     public ctx: CanvasRenderingContext2D;
     public events: IEvents;
+
     private _fill: boolean;
     private _stroke: boolean;
     private _loop: boolean;
+    private _fps: number = 60; 
+    private _fpsInterval: number;
+    private _startTime: number;
+    private _now: number;
+    private _then: number;
 
     constructor(width: number, height: number)
     {
@@ -51,25 +57,34 @@ class Canvas
     private registerEvents()
     {
         let _draw = (timestamp: number) => {
-            if (typeof draw === "function") {
-                draw();
-            }
-
-            if (typeof keyPressed === "function") {
-                for (var key in this.events.keysPressed) {
-                    if (this.events.keysPressed[key]) {
-                        keyPressed();
-                        break;
-                    }
-                }
-            }
-
             if (this._loop) {
                 animationSystem(_draw);
+            }
+            this._now = Date.now();
+            let elapsed = this._now - this._then;
+            
+            if (elapsed > this._fpsInterval) {
+                this._then = this._now - (elapsed % this._fpsInterval);
+
+                if (typeof draw === "function") {
+                    draw();
+                }
+
+                if (typeof keyPressed === "function") {
+                    for (var key in this.events.keysPressed) {
+                        if (this.events.keysPressed[key]) {
+                            keyPressed();
+                            break;
+                        }
+                    }
+                }
             }
         }
 
         let animationSystem = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+        this._fpsInterval = 1000 / this._fps;
+        this._then = Date.now();
+        this._startTime = this._then;
         animationSystem(_draw);
 
         document.addEventListener("keydown", (event) => {
@@ -91,6 +106,24 @@ class Canvas
             this.events.mouseX = event.clientX - rect.left,
             this.events.mouseY = event.clientY - rect.top
         });
+
+        this.canvas.addEventListener("mousedown", (event: MouseEvent) => {
+            if (typeof mouseDown === "function") {
+                mouseDown(event);
+            }
+        });
+
+        this.canvas.addEventListener("mouseup", (event: MouseEvent) => {
+            if (typeof mouseUp === "function") {
+                mouseUp(event);
+            }
+        });
+    }
+
+    public frameRate(fps: number)
+    {
+        this._fps = fps;
+        this._fpsInterval = 1000 / this._fps;
     }
 
     public noLoop()
