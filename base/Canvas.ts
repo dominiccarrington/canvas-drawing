@@ -247,9 +247,10 @@ class Canvas
         this.ctx.font = font;
     }
 
-    public textAlign(align: string)
+    public textAlign(align: string, baseLine = "alphabetic")
     {
         this.ctx.textAlign = align.toLowerCase();
+        this.ctx.textBaseline = baseLine.toLowerCase();
     }
 
     public textSize(text: string)
