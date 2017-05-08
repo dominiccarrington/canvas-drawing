@@ -247,10 +247,17 @@ class Canvas
         this.ctx.font = font;
     }
 
-    public textAlign(align: string, baseLine = "alphabetic")
+    // @deprecated
+    // public textAlign(align: string, baseLine = "alphabetic")
+    // {
+    //     this.ctx.textAlign = align.toLowerCase();
+    //     this.ctx.textBaseline = baseLine.toLowerCase();
+    // }
+
+    public textAlign(align: TextAlign, baseLine = TextBaseLine.ALPHABETIC)
     {
-        this.ctx.textAlign = align.toLowerCase();
-        this.ctx.textBaseline = baseLine.toLowerCase();
+        this.ctx.textAlign = align.toString().toLowerCase();
+        this.ctx.textBaseline = baseLine.toString().toLowerCase();
     }
 
     public textSize(text: string)
@@ -388,4 +395,23 @@ interface IEvents
     mouseX: number;
     mouseY: number;
     keysPressed: Object;
+}
+
+enum TextAlign
+{
+    START,
+    END,
+    CENTER,
+    LEFT,
+    RIGHT
+}
+
+enum TextBaseLine
+{
+    ALPHABETIC,
+    TOP,
+    HANGING,
+    MIDDLE,
+    IDEOGRAPHIC,
+    BOTTOM
 }

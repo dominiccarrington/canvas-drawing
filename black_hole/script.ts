@@ -29,7 +29,7 @@ function draw()
     }
 
     c.font("10px Arial");
-    c.textAlign("center", "middle");
+    c.textAlign(TextAlign.CENTER, TextBaseLine.MIDDLE);
     for (let i = 1; i < 11; i++) {
         if ((turn == ColorSlot.RED && i >= currentValue) || (turn == ColorSlot.BLUE && i > currentValue)) {
             c.fill(255, 0, 0);
@@ -114,6 +114,10 @@ function calcWinner()
     } else {
         winnerSpan.innerText = "Draw...";
     }
+
+    console.log(destory);
+    console.log("Red: " + red);
+    console.log("Blue: " + blue);
 }
 
 function getIndex(col: number, row: number)
